@@ -9,7 +9,7 @@ const pics=["Narita International Airport Terminal 2","Kaminarimon (Fūraijinmon
 const places=[
 [['19:00','抵達成田 T2','入境、領行李','Narita Airport Terminal 2'],['20:30','Skyliner 往京成上野','約 41 分鐘，依實際班次','Keisei Ueno Station'],['21:30','飯店入住・晚餐','京成上野步行約 10 分鐘','Hotel Sardonyx Ueno']],
 [['09:30','淺草雷門','銀座線至淺草','Kaminarimon'],['10:30','仲見世・淺草寺','散步參拜','Sensoji Temple'],['13:30','東京晴空塔','東武晴空塔線約 3 分鐘','Tokyo Skytree']],
-[['11:00','自由活動・準備','避免排太遠的景點','Ueno Station'],['15:30','東京巨蛋入場準備','大江戶線上野御徒町→春日約 5 分鐘','Tokyo Dome'],['待確認','BIGBANG 演唱會','散場留意人潮','Tokyo Dome']],
+[['11:00','自由活動・準備','避免排太遠的景點','Ueno Station'],['15:30','東京巨蛋入場準備','後樂園站 2 號出口步行前往；從上野御徒町搭大江戶線到春日站 6 號出口也方便','Tokyo Dome'],['待確認','BIGBANG 演唱會','散場留意人潮','Tokyo Dome']],
 [['09:30','原宿・竹下通','JR 山手線至原宿','Takeshita Street'],['12:00','表參道午餐・逛街','步行或地鐵','Omotesando'],['14:30','澀谷散步','澀谷十字路口','Shibuya Scramble Crossing'],['15:40','SHIBUYA SKY','目標入場時段，尚未購票','SHIBUYA SKY']],
 [['09:30','上野公園','飯店步行可達','Ueno Park'],['12:00','阿美橫町','美食、藥妝、伴手禮','Ameyoko Shopping District'],['15:00','秋葉原','JR 御徒町→秋葉原一站','Akihabara']],
 [['09:00','出發前往豐島園','御徒町→池袋→西武豐島園','Toshimaen Station'],['11:30','哈利波特影城','已購票，預留 4–5 小時','Warner Bros Studio Tour Tokyo'],['17:00','新宿','大江戶線方向，依體力調整','Shinjuku Station']],
@@ -71,7 +71,7 @@ const pack=['護照及效期','行動電源（隨身）','保暖外套、圍巾'
 const routes=[
 [['成田機場 T2','Skyliner（需特急券）','京成上野','Narita Airport Terminal 2','Keisei Ueno Station']],
 [['上野','東京 Metro 銀座線','淺草','Ueno Station','Asakusa Station'],['淺草','東武晴空塔線／步行','東京晴空塔','Asakusa Station','Tokyo Skytree']],
-[['上野御徒町','都營大江戶線','春日（東京巨蛋）','Ueno-okachimachi Station','Kasuga Station']],
+[['後樂園站','丸之內線／南北線・2 號出口','東京巨蛋','Korakuen Station','Tokyo Dome'],['春日站','大江戶線・6 號出口（上野御徒町直達）','東京巨蛋','Kasuga Station','Tokyo Dome']],
 [['御徒町','JR 山手線','原宿','Okachimachi Station','Harajuku Station'],['表參道','步行／東京 Metro','澀谷','Omotesando','Shibuya Station']],
 [['御徒町','JR 山手線一站','秋葉原','Okachimachi Station','Akihabara Station']],
 [['池袋','西武池袋線／豐島線','豐島園（影城）','Ikebukuro Station','Toshimaen Station']],
@@ -112,7 +112,7 @@ const cats=['餐飲','交通','購物','其他'];
 h+=section('📊 旅費預算統計','<p><b>總花費 ¥'+sum(items).toLocaleString()+'</b></p><h3>分類統計</h3>'+cats.map(c=>'<p>'+c+'：¥'+sum(items.filter(x=>(x.category||'其他')===c)).toLocaleString()+'</p>').join('')+'<h3>每日統計</h3>'+Array.from({length:7},(_,i)=>'<p>12/'+(i+12)+'：¥'+sum(items.filter(x=>x.tripDay===i)).toLocaleString()+'</p>').join('')+'<p class="muted">舊記帳資料未分類時會計入「其他」，未指定旅遊日則不列入每日統計。</p>');
 const cat=$('category');if(!cat&&$('desc')){$('desc').insertAdjacentHTML('afterend','<select id="category" aria-label="花費類別"><option>餐飲</option><option>交通</option><option>購物</option><option>其他</option></select><select id="tripDay" aria-label="花費日期">'+Array.from({length:7},(_,i)=>'<option value="'+i+'">12/'+(12+i)+'</option>').join('')+'</select>')}
 }
-if(idx===2)h+=section('🍜 今日附近餐飲',food[d].map(f=>'<p>'+f[0]+' · '+f[1]+'</p>').join(''));if(idx===3)h+=section('🛍️ 當日購物區域','<p>'+['上野／御徒町','淺草／晴空塔','東京巨蛋周邊','原宿／表參道／澀谷','上野／秋葉原','豐島園／新宿','上野／成田機場'][d]+'：優先選擇順路商店。</p>');
+if(idx===2)h+=section('🍜 今日附近餐飲',food[d].map(f=>'<p>'+f[0]+' · '+f[1]+'</p>').join(''));if(idx===3)h+=section('🛍️ 當日購物區域','<p>'+['上野／御徒町','淺草／晴空塔','後樂園／東京巨蛋周邊','原宿／表參道／澀谷','上野／秋葉原','豐島園／新宿','上野／成田機場'][d]+'：優先選擇順路商店。</p>');
 container.innerHTML=h;
 if(idx===0){const first=view.querySelector('.daybuttons');if(first)first.insertAdjacentElement('afterend',container);else view.prepend(container)}else view.prepend(container);
 container.querySelectorAll('[data-ticket]').forEach(x=>x.onchange=()=>{const t=get('tokyo26tickets',{});t[x.dataset.ticket]=x.value;set('tokyo26tickets',t)});
