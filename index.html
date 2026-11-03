@@ -103,7 +103,7 @@ h+=section('🍜 當日順路美食',food[d].map(f=>'<p><b>'+f[0]+'</b> · '+f[1
 h+=section('🌦️ 天氣與下雨備案','<p><a target="_blank" rel="noopener" href="https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=130000">查看日本氣象廳東京即時預報 ↗</a></p><p class="muted">目前不顯示未經查證的即時氣溫與降雨率。</p><p>☔ '+rain[d]+'</p>');
 }
 if(idx===0||idx===4){
-const st=get('tokyo26tickets',{});h+=section('🎟️ 票券與預約狀態',tickets.map(t=>'<label>'+t[1]+' <select data-ticket="'+t[0]+'"><option value="pending" '+((st[t[0]]||'pending')==='pending'?'selected':'')+'>待確認</option><option value="booked" '+(st[t[0]]==='booked'?'selected':'')+'>已購票</option><option value="none" '+(st[t[0]]==='none'?'selected':'')+'>不需要</option></select></label>').join('')+'<p class="muted">私人票券請存於 iPhone 錢包或私人檔案，不要把 QR Code 或訂單連結放在公開 GitHub 網站。</p>');
+const st=get('tokyo26tickets',{});
 }
 if(idx===4){
 const st=get('tokyo26packing',{});h+=section('🧳 出發前打包清單',pack.map((p,i)=>'<label><input type="checkbox" data-pack="'+i+'" '+(st[i]?'checked':'')+'>'+p+'</label>').join(''));
