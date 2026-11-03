@@ -1,0 +1,18 @@
+{
+  "name": "東京旅遊手冊 TOKYO 2026",
+  "short_name": "東京手冊",
+  "description": "東京七天旅遊行程、交通與地圖",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf7f7",
+  "theme_color": "#20395c",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
