@@ -53,4 +53,76 @@ function loadExpenses(){try{const x=JSON.parse(localStorage.getItem('tokyo26expe
 function drawExpenses(){const el=document.getElementById('expenses');if(!el)return;const list=loadExpenses(),rate=Number(document.getElementById('rate').value)||.22;const total=list.reduce((sum,x)=>sum+x.amount,0);el.innerHTML='<p><b>合計 ¥'+total.toLocaleString()+'</b>　約台幣 '+Math.round(total*rate).toLocaleString()+' 元</p>'+list.map((x,i)=>'<div class="expense"><span>'+x.date+' · '+escapeText(x.desc)+'</span><span>¥'+x.amount.toLocaleString()+' <button data-del="'+i+'">刪除</button></span></div>').join('');el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{let x=loadExpenses();x.splice(+b.dataset.del,1);localStorage.setItem('tokyo26expenses',JSON.stringify(x));drawExpenses()})}
 function escapeText(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 render();
-})();</script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}</script></body></html>
+})();</script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}</script><style>.trip-extra{background:#fff;border-radius:18px;padding:16px;margin:13px 0;box-shadow:0 4px 14px #1a2d450d}.trip-extra h2{font-size:19px;margin:0 0 12px}.trip-extra select,.trip-extra input{padding:10px;border:1px solid #cbd3dd;border-radius:9px;max-width:100%}.trip-extra label{display:flex;gap:9px;padding:9px 0;align-items:center}.trip-extra a{color:#245b86}.route-card{border-left:3px solid #7ea6b7;padding:10px 13px;margin:10px 0;background:#f6fafc;border-radius:8px}.trip-extra .muted{font-size:12px;color:#69788a}.trip-extra button{border:0;background:#254c72;color:white;border-radius:8px;padding:9px 12px}.trip-extra .expense-line{padding:8px 0;border-bottom:1px solid #eee}</style>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id),view=$('view');
+if(!view)return;
+const get=(key,def)=>{try{return JSON.parse(localStorage.getItem(key))??def}catch(e){return def}};
+const set=(key,v)=>{try{localStorage.setItem(key,JSON.stringify(v))}catch(e){}};
+const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const maps=(a,b)=>'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(a)+'&destination='+encodeURIComponent(b)+'&travelmode=transit';
+const tickets=[['concert','12/14 東京巨蛋演唱會'],['potter','12/17 哈利波特影城'],['sky','12/15 SHIBUYA SKY']];
+const pack=['護照及效期','行動電源（隨身）','保暖外套、圍巾','日本 eSIM／漫遊','Suica／PASMO','充電器與充電線','常備藥品','私人票券備份'];
+const routes=[
+[['成田機場 T2','Skyliner（需特急券）','京成上野','Narita Airport Terminal 2','Keisei Ueno Station']],
+[['上野','東京 Metro 銀座線','淺草','Ueno Station','Asakusa Station'],['淺草','東武晴空塔線／步行','東京晴空塔','Asakusa Station','Tokyo Skytree']],
+[['上野御徒町','都營大江戶線','春日（東京巨蛋）','Ueno-okachimachi Station','Kasuga Station']],
+[['御徒町','JR 山手線','原宿','Okachimachi Station','Harajuku Station'],['表參道','步行／東京 Metro','澀谷','Omotesando','Shibuya Station']],
+[['御徒町','JR 山手線一站','秋葉原','Okachimachi Station','Akihabara Station']],
+[['池袋','西武池袋線／豐島線','豐島園（影城）','Ikebukuro Station','Toshimaen Station']],
+[['京成上野','Skyliner（需特急券）','成田機場 T2','Keisei Ueno Station','Narita Airport Terminal 2']]
+];
+const food=[
+[['上野','拉麵／炸豬排'],['御徒町','日式定食']],
+[['淺草','蕎麥麵／天婦羅'],['晴空塔','Solamachi 餐廳街']],
+[['東京巨蛋','東京巨蛋城餐飲'],['水道橋','拉麵／定食']],
+[['原宿','咖啡廳'],['澀谷','壽司／燒肉']],
+[['阿美橫町','海鮮丼'],['秋葉原','咖哩／拉麵']],
+[['豐島園','影城內餐廳'],['新宿','百貨餐廳街']],
+[['上野','早午餐'],['成田機場 T2','機場餐廳']]
+];
+const rain=['抵達日：飯店周邊室內用餐','淺草：Solamachi 室內商場','演唱會：東京巨蛋城室內商場','澀谷：PARCO／百貨','上野：百貨／秋葉原電器店','影城：室內展區為主','回程：機場室內商店'];
+let busy=false,autoselected=false;
+function day(){const el=view.querySelector('.daybuttons button.on');return el?Number(el.dataset.day):0}
+function section(title,content){return '<section class="trip-extra"><h2>'+title+'</h2>'+content+'</section>'}
+function build(){
+if(busy)return;const d=day(),tab=document.querySelector('.appnav button.on');if(!tab)return;
+const idx=[...tab.parentNode.children].indexOf(tab);if(idx!==0&&idx!==4&&idx!==2)return;
+busy=true;view.querySelectorAll('[data-trip-extra]').forEach(e=>e.remove());
+const container=document.createElement('div');container.dataset.tripExtra='1';
+let h='';
+if(idx===0){
+const prog=get('tokyo26progress',{}),all=view.querySelectorAll('[data-spot]'),done=[...all].filter(x=>x.checked).length;
+h+=section('📍 今日行程進度','<p>已完成 '+done+' / '+all.length+' 個景點</p>');
+h+=section('🚆 當日交通路線圖卡',routes[d].map(r=>'<div class="route-card"><b>🟢 '+esc(r[0])+'</b><p>↓ '+esc(r[1])+'</p><b>🔴 '+esc(r[2])+'</b><p class="muted">步行與出口請以當日導航為準。</p><a target="_blank" rel="noopener" href="'+maps(r[3],r[4])+'">Google 地圖查看搭車路線 ↗</a></div>').join('')+'<p class="muted">路線僅供規劃，車資、出口及實際班次以即時資訊為準。</p>');
+h+=section('🍜 當日順路美食',food[d].map(f=>'<p><b>'+f[0]+'</b> · '+f[1]+'　<a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(f[0]+' '+f[1])+'">附近搜尋 ↗</a></p>').join(''));
+h+=section('🌦️ 天氣與下雨備案','<p><a target="_blank" rel="noopener" href="https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=130000">查看日本氣象廳東京即時預報 ↗</a></p><p class="muted">目前不顯示未經查證的即時氣溫與降雨率。</p><p>☔ '+rain[d]+'</p>');
+}
+if(idx===0||idx===4){
+const st=get('tokyo26tickets',{});h+=section('🎟️ 票券與預約狀態',tickets.map(t=>'<label>'+t[1]+' <select data-ticket="'+t[0]+'"><option value="pending" '+((st[t[0]]||'pending')==='pending'?'selected':'')+'>待確認</option><option value="booked" '+(st[t[0]]==='booked'?'selected':'')+'>已購票</option><option value="none" '+(st[t[0]]==='none'?'selected':'')+'>不需要</option></select></label>').join('')+'<p class="muted">私人票券請存於 iPhone 錢包或私人檔案，不要把 QR Code 或訂單連結放在公開 GitHub 網站。</p>');
+}
+if(idx===4){
+const st=get('tokyo26packing',{});h+=section('🧳 出發前打包清單',pack.map((p,i)=>'<label><input type="checkbox" data-pack="'+i+'" '+(st[i]?'checked':'')+'>'+p+'</label>').join(''));
+const items=get('tokyo26expenses',[]),sum=x=>x.reduce((a,b)=>a+(Number(b.amount)||0),0);
+const cats=['餐飲','交通','購物','其他'];
+h+=section('📊 旅費預算統計','<p><b>總花費 ¥'+sum(items).toLocaleString()+'</b></p><h3>分類統計</h3>'+cats.map(c=>'<p>'+c+'：¥'+sum(items.filter(x=>(x.category||'其他')===c)).toLocaleString()+'</p>').join('')+'<h3>每日統計</h3>'+Array.from({length:7},(_,i)=>'<p>12/'+(i+12)+'：¥'+sum(items.filter(x=>x.tripDay===i)).toLocaleString()+'</p>').join('')+'<p class="muted">舊記帳資料未分類時會計入「其他」，未指定旅遊日則不列入每日統計。</p>');
+const cat=$('category');if(!cat&&$('desc')){$('desc').insertAdjacentHTML('afterend','<select id="category" aria-label="花費類別"><option>餐飲</option><option>交通</option><option>購物</option><option>其他</option></select><select id="tripDay" aria-label="花費日期">'+Array.from({length:7},(_,i)=>'<option value="'+i+'">12/'+(12+i)+'</option>').join('')+'</select>')}
+}
+if(idx===2)h+=section('🍜 今日附近餐飲',food[d].map(f=>'<p>'+f[0]+' · '+f[1]+'</p>').join(''));
+container.innerHTML=h;
+if(idx===0){const first=view.querySelector('.daybuttons');if(first)first.insertAdjacentElement('afterend',container);else view.prepend(container)}else view.prepend(container);
+container.querySelectorAll('[data-ticket]').forEach(x=>x.onchange=()=>{const t=get('tokyo26tickets',{});t[x.dataset.ticket]=x.value;set('tokyo26tickets',t)});
+container.querySelectorAll('[data-pack]').forEach(x=>x.onchange=()=>{const p=get('tokyo26packing',{});p[x.dataset.pack]=x.checked;set('tokyo26packing',p)});
+busy=false;
+}
+const observer=new MutationObserver(()=>{if(busy)return;if(!view.querySelector('[data-trip-extra]'))build()});
+observer.observe(view,{childList:true,subtree:false});
+document.addEventListener('click',e=>{if(e.target.closest('[data-day],[data-tab]'))setTimeout(build,30)});
+document.addEventListener('change',e=>{if(e.target.matches('[data-spot]'))setTimeout(build,30)});
+document.addEventListener('click',e=>{if(e.target.id==='addExpense'){const amount=Number($('amt')?.value),desc=$('desc')?.value||'其他',category=$('category')?.value||'其他',tripDay=Number($('tripDay')?.value||0);if(amount>0){const items=get('tokyo26expenses',[]);setTimeout(()=>{const updated=get('tokyo26expenses',[]);const last=updated[updated.length-1];if(last&&Number(last.amount)===amount&&last.desc===desc){last.category=category;last.tripDay=tripDay;set('tokyo26expenses',updated);build()}},80)}}});
+if(!autoselected){autoselected=true;const now=new Date();if(now.getFullYear()===2026&&now.getMonth()===11&&now.getDate()>=12&&now.getDate()<=18){const btn=view.querySelector('[data-day="'+(now.getDate()-12)+'"]');if(btn)btn.click()}}
+build();
+})();
+</script></body></html>
