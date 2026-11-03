@@ -65,6 +65,7 @@ const backupPlans=[
 ['影城交通延誤','立即查看 JR／西武線運行資訊，改走 Google 地圖即時替代路線；入場規定以影城票券為準。'],
 ['回程 Skyliner 延誤','提早查京成電鐵運行狀況；若停駛，查 JR 成田特快／其他機場路線，並評估改搭機場巴士或計程車，優先確保報到時間。']
 ];
+window.tokyoTravelGuides={transitGuide,backupPlans};
 const backupKeys=['tokyo26progress','tokyo26checks','tokyo26expenses','tokyo26rate','tokyo26packing','tokyo26tickets','tokyo26notes'];
 function exportTrip(){const data={format:'tokyo-travel-2026',version:1,exportedAt:new Date().toISOString(),data:{}};backupKeys.forEach(key=>{const v=localStorage.getItem(key);if(v!==null)data.data[key]=v});const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='tokyo-trip-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 async function importTrip(file){if(!file)return;let obj;try{obj=JSON.parse(await file.text())}catch(e){alert('檔案不是有效 JSON');return}if(obj?.format!=='tokyo-travel-2026'||obj?.version!==1||!obj.data||typeof obj.data!=='object'||Array.isArray(obj.data)){alert('備份格式不符合');return}const entries=Object.entries(obj.data);if(entries.some(([key,val])=>!backupKeys.includes(key)||typeof val!=='string'||val.length>1000000)){alert('備份資料包含不支援的內容');return}if(!confirm('將以備份資料覆蓋同名的本機紀錄，確定還原？'))return;entries.forEach(([key,val])=>localStorage.setItem(key,val));alert('已還原資料，畫面將重新整理');location.reload()}
@@ -131,8 +132,8 @@ busy=true;view.querySelectorAll('[data-trip-extra]').forEach(e=>e.remove());
 const container=document.createElement('div');container.dataset.tripExtra='1';
 let h='';
 if(idx===0){
-h+=section('🚆 交通轉乘詳細指引','<p><b>'+esc(transitGuide[d][0])+'</b></p><p>'+esc(transitGuide[d][1])+'</p><p class="muted">'+esc(transitGuide[d][2])+'</p>'+routes[d].map(r=>'<div class="route-card"><b>🟢 '+esc(r[0])+'</b><p>↓ '+esc(r[1])+'</p><b>🔴 '+esc(r[2])+'</b><p class="muted">步行與出口請以當日導航為準。</p><a target="_blank" rel="noopener" href="'+maps(r[3],r[4])+'">Google 地圖查看搭車路線 ↗</a></div>').join('')+'<p class="muted">路線僅供規劃，車資、出口及實際班次以即時資訊為準。</p>');
-h+=section('🆘 當日緊急備案','<p><b>'+esc(backupPlans[d][0])+'</b></p><p>'+esc(backupPlans[d][1])+'</p>');
+h+=section('🚆 交通轉乘詳細指引','<p><b>'+esc(window.tokyoTravelGuides.transitGuide[d][0])+'</b></p><p>'+esc(window.tokyoTravelGuides.transitGuide[d][1])+'</p><p class="muted">'+esc(window.tokyoTravelGuides.transitGuide[d][2])+'</p>'+routes[d].map(r=>'<div class="route-card"><b>🟢 '+esc(r[0])+'</b><p>↓ '+esc(r[1])+'</p><b>🔴 '+esc(r[2])+'</b><p class="muted">步行與出口請以當日導航為準。</p><a target="_blank" rel="noopener" href="'+maps(r[3],r[4])+'">Google 地圖查看搭車路線 ↗</a></div>').join('')+'<p class="muted">路線僅供規劃，車資、出口及實際班次以即時資訊為準。</p>');
+h+=section('🆘 當日緊急備案','<p><b>'+esc(window.tokyoTravelGuides.backupPlans[d][0])+'</b></p><p>'+esc(window.tokyoTravelGuides.backupPlans[d][1])+'</p>');
 h+=section('🍜 當日順路美食',food[d].map(f=>'<p><b>'+f[0]+'</b> · '+f[1]+'　<a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(f[0]+' '+f[1])+'">附近搜尋 ↗</a></p>').join(''));
 const reminders=[null,null,'🎤 東京巨蛋：演唱會開演時間與入場規定請以票券及主辦公告為準；散場預留轉乘時間。','🌇 SHIBUYA SKY：15:40～16:00 是目標時段，尚待購票。',null,'🪄 哈利波特影城：預計 11:30 入場，建議提前抵達並核對票券時間。','✈️ 20:10 返台班機：請預留前往成田、托運及安檢時間。'];if(reminders[d])h+=section('⏰ 當日重要提醒','<p>'+reminders[d]+'</p>');
 h+=section('🌦️ 天氣與下雨備案','<p><a target="_blank" rel="noopener" href="https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=130000">查看日本氣象廳東京即時預報 ↗</a></p><p class="muted">目前不顯示未經查證的即時氣溫與降雨率。</p><p>☔ '+rain[d]+'</p>');
