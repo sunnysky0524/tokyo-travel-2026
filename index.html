@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#20395c"><title>TOKYO 2026｜東京交通手冊</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;color:#25354a;background:#f8f6f5}*{box-sizing:border-box}body{margin:0}header{padding:32px 20px 24px;background:linear-gradient(135deg,#1b3555,#5a779a 65%,#e7a9bb);color:white}header h1{font:700 43px Georgia,serif;letter-spacing:3px;margin:0}header p{margin:5px 0}main{max-width:800px;margin:auto;padding:18px 14px 90px}.sub{opacity:.85;font-size:13px}.tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 14px;scrollbar-width:thin}.tab{flex:0 0 auto;background:white;border:1px solid #e0dce2;border-radius:15px;padding:11px 13px;color:#334a66;font-weight:700}.tab.active{background:#244a72;color:white;border-color:#244a72}.card{background:white;border:1px solid #ece6e6;border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 4px 14px #24344b0a}h2{font-size:21px;margin:0 0 7px}h3{font-size:16px;margin:0 0 12px}.muted{color:#66758a;font-size:13px}.route{border-left:3px solid #e6b3c6;padding:1px 0 14px 16px;margin-left:5px}.route:last-child{padding-bottom:0}.route b{display:block;margin-bottom:5px}.route p{font-size:14px;line-height:1.65;margin:5px 0}.pill{display:inline-block;padding:5px 9px;background:#f8edf1;border-radius:30px;color:#915a72;font-size:12px;margin:3px 4px 3px 0}.link{display:inline-block;color:#215b88;text-decoration:none;border:1px solid #bcd0df;padding:9px 11px;border-radius:10px;font-size:13px;font-weight:600;margin:6px 5px 0 0}.map{background:#214b72;color:white;border-color:#214b72}.check{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #f0edf0;align-items:center}.check input{width:20px;height:20px;accent-color:#bd7795}.notice{font-size:13px;line-height:1.7;background:#fff4e8;padding:13px;border-radius:12px}.foot{text-align:center;font-size:12px;color:#8a91a0;margin-top:24px}button{cursor:pointer}a:focus-visible,button:focus-visible{outline:3px solid #edb1c9}@media(min-width:700px){header{text-align:center}.tabs{justify-content:center}}
+</style></head><body><header><div class="sub">TRAVEL & TRANSIT GUIDE</div><h1>TOKYO 2026</h1><p>12.12 SAT — 12.18 FRI · 7 DAYS</p><div class="sub">每日路線・車站轉乘・Google 地圖導航</div></header><main>
+<section class="card"><h3>🏨 交通中心｜上野</h3><p>住宿區域：上野・御徒町（Hotel Sardonyx Ueno）</p><p class="muted">JR 御徒町、上野御徒町、上野廣小路、仲御徒町等站可依目的地選用；不必每次走到 JR 上野站。</p><a class="link map" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=Hotel%20Sardonyx%20Ueno">📍 飯店位置</a><a class="link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=Keisei%20Ueno%20Station">京成上野站</a></section>
+<div class="tabs" id="tabs" aria-label="選擇日期"></div><section id="daily" aria-live="polite"></section>
+<section class="card"><h3>🧳 出發前待辦</h3><div id="checks"></div><p class="muted">勾選狀態只儲存在這台裝置的瀏覽器，不會傳到 GitHub 或伺服器。</p></section>
+<section class="card"><h3>🚉 交通小抄</h3><p>🟦 JR 山手線：上野、御徒町、秋葉原、原宿、澀谷、新宿、池袋。</p><p>🟣 大江戶線：上野御徒町 → 春日（東京巨蛋）。</p><p>🟠 銀座線：上野廣小路 → 淺草。</p><p>🟢 西武池袋線：池袋 → 豐島園（哈利波特影城，注意列車終點與是否需要轉車）。</p><p class="notice">時間、票價、月台與出口為規劃參考，出發當天請以 Google 地圖及車站公告為準。Google 地圖可能推薦不同轉乘方式。</p></section>
+<div class="foot">Made for a Tokyo journey ♡ · No names, booking IDs, tickets or payment details</div></main>
+<script>
+const days=[
+{date:"12/12",week:"六",title:"抵達東京・上野",note:"19:00 抵達成田 T2；入境、領行李後再搭車。Skyliner 班次依當日時間表。",stops:[
+["成田機場 T2 → 京成上野","京成 Skyliner 直達京成上野；車程約 40–45 分鐘，依班次為準。","Narita Airport Terminal 2 Station","Keisei Ueno Station","transit"],
+["京成上野 → 飯店","步行約 10–15 分鐘，攜行李可依地圖選平坦路線。","Keisei Ueno Station","Hotel Sardonyx Ueno","walking"],
+["飯店周邊晚餐","晚抵達，安排簡單晚餐與休息。","Hotel Sardonyx Ueno","Ameyoko Shopping District","walking"]]},
+{date:"12/13",week:"日",title:"淺草・晴空塔",note:"先淺草、再晴空塔；兩地也可視天氣散步。",stops:[
+["飯店 → 淺草雷門","步行至上野廣小路站，搭東京 Metro 銀座線至淺草站。","Ueno-hirokoji Station","Asakusa Station","transit"],
+["雷門 → 仲見世 → 淺草寺","徒步遊覽，假日人潮較多。","Kaminarimon","Sensoji Temple","walking"],
+["淺草 → 東京晴空塔","可搭東武晴空塔線至東京晴空塔站，或步行約 20–30 分鐘。","Asakusa Station","Tokyo Skytree","transit"],
+["晴空塔 → 飯店","可依當時位置選押上站／東京晴空塔站轉乘回御徒町周邊。","Tokyo Skytree","Hotel Sardonyx Ueno","transit"]]},
+{date:"12/14",week:"一",title:"BIGBANG・東京巨蛋",note:"演唱會 18:00 開演；建議預留入場及周邊購物時間，散場會擁擠。",stops:[
+["飯店 → 東京巨蛋","上野御徒町站搭都營大江戶線至春日站，步行前往東京巨蛋。","Ueno-okachimachi Station","Tokyo Dome","transit"],
+["東京巨蛋 → 飯店","散場可走春日站；若人潮過多可評估後樂園、水道橋站。","Tokyo Dome","Hotel Sardonyx Ueno","transit"]]},
+{date:"12/15",week:"二",title:"原宿・表參道・澀谷",note:"SHIBUYA SKY 目標 15:40–16:00（尚待購票）；夕陽時間須依當日天氣。",stops:[
+["飯店 → 原宿","JR 御徒町站搭山手線前往原宿站。","Okachimachi Station","Harajuku Station","transit"],
+["原宿 → 表參道","竹下通、明治神宮可視時間安排；往表參道步行。","Harajuku Station","Omotesando","walking"],
+["表參道 → 澀谷","可步行或搭東京 Metro 至澀谷，依體力決定。","Omotesando Station","Shibuya Station","transit"],
+["澀谷 → SHIBUYA SKY","前往 Shibuya Scramble Square；預留排隊與電梯時間。","Shibuya Station","SHIBUYA SKY","walking"],
+["澀谷 → 飯店","JR 山手線回御徒町。","Shibuya Station","Okachimachi Station","transit"]]},
+{date:"12/16",week:"三",title:"上野・阿美橫町・秋葉原",note:"這天交通最輕鬆，可保留較多購物時間。",stops:[
+["飯店 → 上野公園","步行遊覽上野公園。","Hotel Sardonyx Ueno","Ueno Park","walking"],
+["上野公園 → 阿美橫町","步行逛街購物。","Ueno Park","Ameyoko Shopping District","walking"],
+["御徒町 → 秋葉原","JR 山手線或京濱東北線一站至秋葉原。","Okachimachi Station","Akihabara Station","transit"],
+["秋葉原 → 飯店","JR 回御徒町，或依體力步行。","Akihabara Station","Hotel Sardonyx Ueno","transit"]]},
+{date:"12/17",week:"四",title:"哈利波特影城・新宿",note:"11:00 哈利波特影城已購票；建議提早抵達並預留至少 4 小時參觀。",stops:[
+["飯店 → 池袋","JR 御徒町搭山手線到池袋。","Okachimachi Station","Ikebukuro Station","transit"],
+["池袋 → 豐島園","搭西武池袋線方向列車；依班次可能在練馬換乘西武豐島線。","Ikebukuro Station","Toshimaen Station","transit"],
+["豐島園 → 哈利波特影城","出站步行至 Warner Bros. Studio Tour Tokyo。","Toshimaen Station","Warner Bros. Studio Tour Tokyo","walking"],
+["影城 → 新宿","從豐島園出發，依地圖選大江戶線等路線至新宿。","Warner Bros. Studio Tour Tokyo","Shinjuku Station","transit"],
+["新宿 → 飯店","JR 山手線至御徒町。","Shinjuku Station","Okachimachi Station","transit"]]},
+{date:"12/18",week:"五",title:"最後採買・返台",note:"20:10 成田 T2 起飛；建議提早約 2.5–3 小時到機場，依航司公告調整。飯店 10:00 前退房。",stops:[
+["飯店 → 京成上野","退房、領取寄放行李後步行至京成上野。","Hotel Sardonyx Ueno","Keisei Ueno Station","walking"],
+["京成上野 → 成田 T2","搭 Skyliner 前往成田機場第 2 航廈，預留行李與安檢時間。","Keisei Ueno Station","Narita Airport Terminal 2 Station","transit"]]}
+];
+const tasks=["確認 SHIBUYA SKY 門票","完成 Visit Japan Web","確認護照效期","確認日本 eSIM／漫遊","準備 Suica 或 PASMO","確認 Skyliner 班次及購票方式","確認飯店付款與入住資訊（私人資料不要上傳）","準備保暖衣物與充電設備","下載離線地圖與保存票券於私人裝置"];
+function maps(a,b,mode){return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(a)+"&destination="+encodeURIComponent(b)+"&travelmode="+mode}
+function place(q){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q)}
+const tabs=document.getElementById("tabs"),daily=document.getElementById("daily");
+function render(i){tabs.innerHTML=days.map((d,j)=>'<button class="tab '+(i===j?'active':'')+'" data-i="'+j+'">'+d.date+' ('+d.week+')</button>').join("");const d=days[i];daily.innerHTML='<section class="card"><div class="muted">DAY '+(i+1)+' · '+d.date+' ('+d.week+')</div><h2>'+d.title+'</h2><p class="notice">'+d.note+'</p></section><section class="card"><h3>🗺️ 今日交通路線</h3>'+d.stops.map((s,k)=>'<div class="route"><b>'+(k+1)+'. '+s[0]+'</b><p>'+s[1]+'</p><a class="link map" href="'+maps(s[2],s[3],s[4])+'" target="_blank" rel="noopener noreferrer">Google 地圖導航 ↗</a><a class="link" href="'+place(s[3])+'" target="_blank" rel="noopener noreferrer">查看目的地 ↗</a></div>').join('')+'</section>';tabs.querySelectorAll("button").forEach(b=>b.onclick=()=>render(Number(b.dataset.i)));tabs.querySelector(".active").scrollIntoView({inline:"nearest",block:"nearest"})}
+const checks=document.getElementById("checks");function getSaved(){try{return JSON.parse(localStorage.getItem("tokyo26checks")||"{}")}catch(e){return {}}}const saved=getSaved();tasks.forEach((t,i)=>{const l=document.createElement("label");l.className="check";const c=document.createElement("input");c.type="checkbox";c.checked=!!saved[i];c.onchange=()=>{const s=getSaved();s[i]=c.checked;try{localStorage.setItem("tokyo26checks",JSON.stringify(s))}catch(e){}};l.append(c,document.createTextNode(t));checks.append(l)});render(0);
+</script></body></html>
