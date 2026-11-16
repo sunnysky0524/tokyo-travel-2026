@@ -213,10 +213,18 @@ const couponOffers=[
 ['京王百貨新宿店','百貨','新宿','滿 ¥3,000（未稅）享 5% OFF','2027/03/31','訪日旅客限定，付款前出示；部分商品排除'],
 ['Alpen Group','運動用品','新宿','指定商品免稅另享 5% OFF','2027/06/30','指定免稅店及商品，結帳前出示條碼'],
 ['ANA DUTY FREE','機場免稅','成田 T1（非 T2）','指定商品 5% OFF','2027/03/31','圖片指定成田第一航廈，回程 T2 不適用此店'],
+// 新發現的候選店家：未取得可直接出示的有效優惠券。
+["多慶屋 Takeya","綜合","御徒町・上野","訪日旅客優惠資訊待確認","待確認","上野順路；請先確認活動及指定商品"],
+["Tomod's 藥妝","藥妝","依門市","訪日旅客優惠資訊待確認","待確認","需確認指定門市與活動"],
+["LAOX 樂購仕","電器","秋葉原","訪日旅客優惠資訊待確認","待確認","秋葉原順路；需確認活動"],
+["西武百貨 SEIBU","百貨","澀谷・池袋（需繞路）","訪日旅客優惠資訊待確認","待確認","需確認是否須持護照兌換"],
+["小田急百貨 Odakyu","百貨","新宿","訪日旅客優惠資訊待確認","待確認","新宿順路；需確認活動"],
+["AOKI／ORIHICA","服飾","新宿","訪日旅客優惠資訊待確認","待確認","非必要採買；確認指定店"],
+["Snow Peak","戶外用品","依門市","訪日旅客優惠資訊待確認","待確認","確認指定店與活動"],
 ];
 const couponDayAreas=[['上野'],['淺草'],['上野'],['澀谷'],['上野','御徒町','秋葉原'],['新宿'],['上野']];
 function couponCard(c){return '<article class="coupon-card"><div class="coupon-top"><span class="tag">'+c[1]+'</span><strong>'+c[0]+'</strong></div><p><b>'+c[3]+'</b></p><p class="muted2">📍 '+c[2]+' · 📆 圖片期限：'+c[4]+'</p><p class="muted2">'+c[5]+'</p>'+(c[0]==='唐吉訶德'?'<p><a href="https://japanportal.donki-global.com/coupon/?ptcd=0293000001" target="_blank" rel="noopener noreferrer">🎟️ 開啟即時優惠券 ↗</a></p>':'')+'<a href="'+map(c[0]+' 東京')+'" target="_blank" rel="noopener noreferrer">📍 查詢附近分店 ↗</a></article>'}
-function couponSection(d){const areas=couponDayAreas[d],matches=couponOffers.filter(c=>c[2].split('・').some(a=>areas.includes(a))),rest=couponOffers.filter(c=>!matches.includes(c));return '<div class="section"><h2>🎟️ 每日順路優惠券</h2><p class="muted2">12/'+(12+d)+' 附近可優先找的店家；同品牌並非每間分店都適用。這裡整理你提供的優惠券文字，<b>結帳仍需出示手機裡的原始條碼圖片</b>，網站目前未收錄原圖；請保留手機中的優惠券原始圖片。</p><div class="coupon-grid">'+matches.map(couponCard).join('')+'</div><details><summary>查看其他優惠券（不一定順路）</summary><div class="coupon-grid">'+rest.map(couponCard).join('')+'</div></details><p class="muted2">優惠內容與期限依你提供的圖片抄錄，並非店家即時確認；折扣不一定能與其他活動併用。</p></div>'}
+function couponSection(d){const areas=couponDayAreas[d],matches=couponOffers.filter(c=>c[2].split('・').some(a=>areas.includes(a))),rest=couponOffers.filter(c=>!matches.includes(c));return '<div class="section"><h2>🎟️ 每日順路優惠券</h2><p class="muted2">12/'+(12+d)+' 附近可優先找的店家；同品牌並非每間分店都適用。包含你提供的優惠券及新發現的候選店家；「待確認」者尚無可直接出示的有效券。<b>結帳仍需出示手機裡的原始條碼圖片</b>，網站目前未收錄原圖；請保留手機中的優惠券原始圖片。</p><div class="coupon-grid">'+matches.map(couponCard).join('')+'</div><details><summary>查看其他優惠券（不一定順路）</summary><div class="coupon-grid">'+rest.map(couponCard).join('')+'</div></details><p class="muted2">原有優惠依你提供的圖片整理；新增候選店家尚未確認優惠。實際期限、門市與是否能併用免稅，請以店家公告為準。</p></div>'}
 function klookCounterPhoto(){return '<figure class="location-visual"><img loading="lazy" style="width:100%;border-radius:12px;display:block" src="https://img.gototravel.tw/2019/tokyo/transport/narita-terminal-3/narita-terminal-2-31.jpg" alt="成田機場第二航廈 Skyliner & Keisei Information Center 現場櫃台，深藍色招牌" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>照片目前無法載入，請點下方來源連結查看。</p><figcaption>📸 成田 T2 B1F Skyliner & Keisei Information Center 現場照片（照片來源：來一球叭噗；現場配置可能變動）。<a href="https://gototravel.tw/tokyo-narita-airport-terminal-2/" target="_blank" rel="noopener noreferrer">查看照片來源 ↗</a></figcaption></figure>'}
 function locationPicture(kind){
 const isTax=kind==='tax',isAirport=kind==='airport';
