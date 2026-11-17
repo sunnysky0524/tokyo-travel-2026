@@ -211,19 +211,19 @@ const chosen=foodDays[day],filtered=food.filter(f=>chosen.areas.includes(f[0])&&
 out=daysBar()+'<div class="section"><h2>🍜 當日順路美食</h2><h3>'+chosen.title+'</h3><p class="muted2">'+chosen.tip+'</p><p class="muted2">📍 依當天行程所在區域分類；下方是候選餐廳，不代表已訂位或已安排固定用餐時間；點「線上訂位」進入店家網站選日期、時間與 2 人，未標示已訂位。</p><div class="daybuttons food-categories">'+groups.map((g,i)=>'<button type="button" data-food-filter="'+i+'" class="'+(foodFilter===i?'on':'')+'">'+g+'</button>').join('')+'</div>'+(filtered.length?filtered.map(f=>'<div class="spot"><span class="tag">📍 '+f[0]+'</span><h3>'+f[1]+'</h3><p class="muted2">'+f[2]+'</p><div class="quick-actions">'+a(map(f[3]),'📍 導航',true)+(f[4]?a(f[4],'📅 線上訂位（選 2 人／日期）',true):a('https://www.google.com/search?q='+encodeURIComponent(f[3]+' メニュー 予約'),'搜尋菜單／訂位資訊（未核實）',true))+'</div><p class="muted2">💴 預算：'+(/壽喜燒|涮涮鍋|燒肉/.test(f[2])?'依套餐與肉品等級而異':'依點餐內容而異')+' · '+(/壽喜燒|涮涮鍋|燒肉/.test(f[2])?'熱門時段建議先確認訂位':'出發前確認營業時間')+'</p></div>').join(''):'<p class="muted2">這個分類目前沒有符合當日區域的餐廳，請切換「全部」或其他日期。</p>')+'</div>';
 }
 const couponOffers=[
-['松本清','藥妝','上野・澀谷・新宿','滿 ¥15,000／35,000／55,000，額外 3%／5%／7%','2027/03/31','指定商品與門市，結帳前出示原圖'],
-['SUGI 杉藥局','藥妝','依門市','滿 ¥10,000／30,000／50,000，額外 4%／6%／8%','2027/02/28','指定商品與門市'],
-['Sundrug 尚都樂客','藥妝','澀谷・上野','滿 ¥10,000／30,000／50,000，額外 3%／5%／7%','未標示','結帳前出示原圖'],
-['KOKUMIN 國民藥妝','藥妝','依門市','滿 ¥10,000 5% OFF；滿 ¥30,000 8% OFF','2027/12/31','需符合店家免稅條件'],
-['鶴羽藥妝 Tsuruha','藥妝','依門市','滿 ¥10,000／30,000／50,000，額外 3%／5%／7%','未標示','不可與其他優惠券併用'],
-['Cocokara Fine','藥妝','御徒町・新宿','滿 ¥10,000／30,000／50,000，3%／5%／7% OFF','2027/03/31','指定免稅店、部分商品排除'],
-['BicCamera','電器','新宿・秋葉原','圖片標示指定商品 3%／5%／7% 優惠','2027/04/30','不同品類適用不同折扣'],
+['松本清','藥妝','上野・澀谷・新宿','指定松本清自有品牌：滿 ¥10,000／30,000／50,000，額外 3%／5%／7%','2027/03/31','此張為指定自有品牌優惠，並非全店通用；結帳前出示原始 QR Code'],
+['SUGI 杉藥局','藥妝','依門市','滿 ¥10,000／30,000／50,000（含稅），額外 4%／6%／8%；宣傳圖標示連同最高 10% 免稅為 14%／16%／18%','2027/02/28','僅適用指定免稅店及符合條件商品；14%／16%／18% 為宣傳合計標示，實際優惠依結帳計算，不代表單一折扣率'],
+['Sundrug 尚都樂客','藥妝','澀谷・上野','滿 ¥10,000／30,000／50,000（未稅），額外 3%／5%／7%','未標示','限符合免稅資格之購物，結帳前出示原始條碼；醫藥品、化妝品等部分品項排除'],
+['KOKUMIN 國民藥妝','藥妝','依門市','滿 ¥10,000 未滿 ¥30,000 額外 5%；滿 ¥30,000 額外 8%','2027/12/31','僅指定免稅門市；每帳號可能有限制，不能併用其他券，部分品項排除'],
+['鶴羽藥妝 Tsuruha','藥妝','依門市','滿 ¥10,000／30,000／50,000（含稅），額外 3%／5%／7%','未標示','圖片標示與免稅優惠分開；結帳前出示，不能與其他優惠券併用，部分商品排除'],
+['Cocokara Fine','藥妝','御徒町・新宿','滿 ¥10,000／30,000／50,000（未稅），額外 3%／5%／7%','2027/03/31','僅指定免稅店，購物結帳前出示；部分品項與其他折扣不能併用'],
+['BicCamera','電器','新宿・秋葉原','指定日用品／藥妝等 5%、家電／3C 等 7%、日本清酒等 3% 額外折扣（依商品適用）','2027/04/30','免稅消費滿 ¥5,000（未稅）等條件；需出示優惠券與免稅資格，部分品牌及品項排除；兩組條碼依券面指示使用'],
 ['EDION 愛電王','電器','依門市','指定家電 7% 或藥妝食品 5% OFF','2027/12/31','部分商品不適用'],
 ['YAMADA 山田電機','電器','依門市','指定商品額外 7% OFF','2027/03/31','部分商品排除'],
 ['唐吉訶德','綜合','淺草・澀谷・上野','滿 ¥11,000／33,000（含稅），額外 5%／7% OFF','未標示','結帳前開啟即時優惠券條碼給店員掃描；截圖可能無效，部分商品排除'],
 ['大丸・松坂屋百貨','百貨','上野・御徒町','指定賣場 5% OFF；圖片另標示美食券','2027/08/31','食品、餐廳、咖啡廳排除；部分商品不適用'],
 ['東武百貨池袋店','百貨','池袋（需繞路）','兌換 5% OFF 優惠券','2027/09/30','須先至指定櫃檯兌換'],
-['京王百貨新宿店','百貨','新宿','滿 ¥3,000（未稅）享 5% OFF','2027/03/31','訪日旅客限定，付款前出示；部分商品排除'],
+['京王百貨新宿店','百貨','新宿','單次消費滿 ¥3,000（未稅）享 5% OFF；優惠編號 76–232','2027/03/31','訪日旅客限定，付款前向收銀台出示；不能與京王 Passport Card 等優惠併用，食品及部分品牌／櫃位排除'],
 ['Alpen Group','運動用品','新宿','指定商品免稅另享 5% OFF','2027/06/30','指定免稅店及商品，結帳前出示條碼'],
 ['ANA DUTY FREE','機場免稅','成田 T1（非 T2）','指定商品 5% OFF','2027/03/31','圖片指定成田第一航廈，回程 T2 不適用此店'],
 // 新發現的候選店家：未取得可直接出示的有效優惠券。
@@ -237,7 +237,7 @@ const couponOffers=[
 ];
 const couponDayAreas=[['上野'],['淺草'],['上野'],['澀谷'],['上野','御徒町','秋葉原'],['新宿'],['上野']];
 function couponCard(c){return '<article class="coupon-card"><div class="coupon-top"><span class="tag">'+c[1]+'</span><strong>'+c[0]+'</strong></div><p><b>'+c[3]+'</b></p><p class="muted2">📍 '+c[2]+' · 📆 圖片期限：'+c[4]+'</p><p class="muted2">'+c[5]+'</p>'+(c[0]==='唐吉訶德'?'<p><a href="https://japanportal.donki-global.com/coupon/?ptcd=0293000001" target="_blank" rel="noopener noreferrer">🎟️ 開啟即時優惠券 ↗</a></p>':'')+'<a href="'+map(c[0]+' 東京')+'" target="_blank" rel="noopener noreferrer">📍 查詢附近分店 ↗</a></article>'}
-function couponSection(d){const areas=couponDayAreas[d],matches=couponOffers.filter(c=>c[2].split('・').some(a=>areas.includes(a))),rest=couponOffers.filter(c=>!matches.includes(c));return '<div class="section" id="coupon-list-anchor"><h2>🎟️ 每日順路優惠券</h2><p class="muted2">12/'+(12+d)+' 附近可優先找的店家；同品牌並非每間分店都適用。包含你提供的優惠券及新發現的候選店家；「待確認」者尚無可直接出示的有效券。<b>結帳仍需出示手機裡的原始條碼圖片</b>，網站目前未收錄原圖；請保留手機中的優惠券原始圖片。</p><div class="coupon-grid">'+matches.map(couponCard).join('')+'</div><details><summary>查看其他優惠券（不一定順路）</summary><div class="coupon-grid">'+rest.map(couponCard).join('')+'</div></details><p class="muted2">原有優惠依你提供的圖片整理；新增候選店家尚未確認優惠。實際期限、門市與是否能併用免稅，請以店家公告為準。</p></div>'}
+function couponSection(d){const areas=couponDayAreas[d],matches=couponOffers.filter(c=>c[2].split('・').some(a=>areas.includes(a))),rest=couponOffers.filter(c=>!matches.includes(c));return '<div class="section" id="coupon-list-anchor"><h2>🎟️ 每日順路優惠券</h2><p class="muted2">12/'+(12+d)+' 附近可優先找的店家；同品牌並非每間分店都適用。包含你提供的優惠券及新發現的候選店家；「待確認」者尚無可直接出示的有效券。<b>結帳仍需出示手機裡的原始條碼圖片</b>，網站目前未收錄可掃描的原始條碼／QR Code；請保留手機中的優惠券原始圖片，現場需出示原圖，僅憑本站文字無法使用。</p><div class="coupon-grid">'+matches.map(couponCard).join('')+'</div><details><summary>查看其他優惠券（不一定順路）</summary><div class="coupon-grid">'+rest.map(couponCard).join('')+'</div></details><p class="muted2">原有優惠依你提供的圖片整理；SUGI 14%／16%／18% 等是券面宣傳的免稅加折扣合計，不應當作直接從含稅售價再扣相同百分比。新增候選店家尚未確認優惠。實際期限、門市與是否能併用免稅，請以店家公告為準。</p></div>'}
 function klookCounterPhoto(){return '<figure class="location-visual"><img loading="lazy" style="width:100%;border-radius:12px;display:block" src="https://img.gototravel.tw/2019/tokyo/transport/narita-terminal-3/narita-terminal-2-31.jpg" alt="成田機場第二航廈 Skyliner & Keisei Information Center 現場櫃台，深藍色招牌" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>照片目前無法載入，請點下方來源連結查看。</p><figcaption>📸 成田 T2 B1F Skyliner & Keisei Information Center 現場照片（照片來源：來一球叭噗；現場配置可能變動）。<a href="https://gototravel.tw/tokyo-narita-airport-terminal-2/" target="_blank" rel="noopener noreferrer">查看照片來源 ↗</a></figcaption></figure>'}
 function locationPicture(kind){
 const isTax=kind==='tax',isAirport=kind==='airport';
