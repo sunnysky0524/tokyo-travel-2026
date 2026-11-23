@@ -165,7 +165,7 @@ const specialChecks={
 function conflictResults(d){const list=places[d],legs=legPlans[d],out=[];for(let i=1;i<list.length;i++){const before=clockMinutes(list[i-1][0]),after=clockMinutes(list[i][0]),type=stopTypes[d][i],leg=specialChecks[d+'-'+(i-1)]||legs[i-1];if(before===null||after===null||type==='event'){out.push({kind:'unknown',i,label:'時間未確認，暫不判定'});continue}const gap=after-before,required=leg.min+leg.stay,delta=gap-required;out.push({kind:delta<0?'risk':'ok',i,gap,required,delta,leg,type})}return out}
 function conflictCard(d){let rows='';for(const r of conflictResults(d)){const before=places[d][r.i-1],after=places[d][r.i];if(r.kind==='unknown'){rows+='<p class="muted2">⚪ '+before[1]+' → '+after[1]+'：'+r.label+'</p>';continue}rows+='<p class="'+(r.kind==='risk'?'time-risk':'muted2')+'">'+(r.kind==='risk'?'⚠️':'✅')+' '+before[0]+' → '+after[0]+'｜可用 '+r.gap+' 分，預估需 '+r.required+' 分'+(r.kind==='risk'?'，可能不足 '+(-r.delta)+' 分':'，剩餘 '+r.delta+' 分')+'<br><small>'+(r.leg.description||r.leg.label||'移動與停留緩衝')+'</small></p>'}return '<div class="section"><h2>⏱️ 行程時間差檢查</h2><details class="trip-fold"><summary>展開交通／停留時間檢查</summary>'+rows+'<p class="muted2">依交通出發、固定入場、自由景點等類型區分；為規劃估計，非即時路況。航班 20:10 為起飛時間，非抵達機場時間。</p></details></div>'}
 function japanNow(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());return Object.fromEntries(parts.map(x=>[x.type,x.value]))}
-function todayBanner(d){const now=japanNow(),isTrip=now.year==='2026'&&now.month==='12'&&Number(now.day)>=12&&Number(now.day)<=18;const minute=Number(now.hour)*60+Number(now.minute);const p=progress();let next=places[d].findIndex((x,i)=>!p[d+'-'+i]&&(clockMinutes(x[0])===null||clockMinutes(x[0])>=minute));if(next<0)next=places[d].findIndex((x,i)=>!p[d+'-'+i]);return '<div class="section today-banner"><b>🇯🇵 日本時間 '+now.hour+':'+now.minute+'</b><p>'+(isTrip&&d===Number(now.day)-12?'今天 12/'+now.day+'｜':'目前選擇 12/'+(12+d)+'｜')+(next<0?'今日行程已全部勾選完成':'下一個未完成：'+places[d][next][0]+' '+places[d][next][1])+'</p><p class="muted2">「下一個」依預定時間及勾選狀態判斷，非即時定位。</p></div>'}
+function todayBanner(d){const now=japanNow(),isTrip=now.year==='2026'&&now.month==='12'&&Number(now.day)>=12&&Number(now.day)<=18;const minute=(isTrip&&d===Number(now.day)-12)?Number(now.hour)*60+Number(now.minute):-1;const p=progress();let next=places[d].findIndex((x,i)=>!p[d+'-'+i]&&(clockMinutes(x[0])===null||clockMinutes(x[0])>=minute));if(next<0)next=places[d].findIndex((x,i)=>!p[d+'-'+i]);return '<div class="section today-banner"><b>🇯🇵 日本時間 '+now.hour+':'+now.minute+'</b><p>'+(isTrip&&d===Number(now.day)-12?'今天 12/'+now.day+'｜':'目前選擇 12/'+(12+d)+'｜')+(next<0?'今日行程已全部勾選完成':'下一個未完成：'+places[d][next][0]+' '+places[d][next][1])+'</p><p class="muted2">「下一個」依預定時間及勾選狀態判斷，非即時定位。</p></div>'}
 const legFares=[
 [['Skyliner','約 41–50 分','約 ¥2,500–2,700','直達京成上野，特急券']],
 [['銀座線','約 10–20 分','約 ¥180–250','直達淺草'],['步行／東武線','約 20–30 分步行／搭車約 3 分','步行 ¥0／列車約 ¥150–200','步行不轉乘']],
@@ -191,8 +191,7 @@ const foodPhotoHints={
 'AFURI 原宿':['https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80','拉麵示意照片'],
 '淺草梅園':['https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=800&q=80','甜點示意照片']
 };
-function foodPhotoCard(f){const p=foodPhotoHints[f[1]];if(!p)return '';const target='https://www.google.com/search?tbm=isch&q='+encodeURIComponent(f[3]+' 店舗 料理');return '<a href="'+target+'" target="_blank" rel="noopener noreferrer" style="display:block;max-width:420px;margin:10px 0;text-decoration:none"><img loading="lazy" src="'+p[0]+'" alt="'+p[1]+'" style="display:block;width:100%;max-height:210px;object-fit:cover;border-radius:12px" onerror="this.hidden=true"><span class="muted2">📷 '+p[1]+'（非店家實拍）・點此查看店家實際照片 ↗</span></a>'}
-
+function foodPhotoCard(f){const p=foodPhotoHints[f[1]],target='https://www.google.com/search?tbm=isch&q='+encodeURIComponent(f[3]+' 店舗 料理');return '<a href="'+target+'" target="_blank" rel="noopener noreferrer" style="display:block;max-width:420px;margin:10px 0;text-decoration:none">'+(p?'<img loading="lazy" src="'+p[0]+'" alt="'+p[1]+'" style="display:block;width:100%;max-height:210px;object-fit:cover;border-radius:12px" onerror="this.hidden=true">':'')+'<span class="muted2">📷 查看 '+escapeText(f[1])+' 實際照片 ↗'+(p?'（上方為示意圖）':'')+'</span></a>'}
 function render(){nav.innerHTML=tabs.map((t,i)=>i===1?'':'<button data-tab="'+i+'" class="'+(i===active?'on':'')+'">'+t+'</button>').join('');let out='';
 if(active===0){
 const titles=['抵達東京・上野','淺草・晴空塔','BIGBANG 東京巨蛋','原宿・表參道・澀谷','上野・秋葉原','哈利波特影城・新宿','最後採買・返台'];
@@ -210,7 +209,7 @@ const foodDays=[
 {title:'12/13（日）｜淺草・晴空塔',areas:['淺草','晴空塔'],tip:'淺草午餐、晴空塔晚餐可二選一。'},
 {title:'12/14（一）｜東京巨蛋演唱會',areas:['東京巨蛋'],tip:'東京巨蛋附近，建議演唱會前用餐。'},
 {title:'12/15（二）｜原宿・表參道・澀谷',areas:['原宿','澀谷'],tip:'原宿午餐、澀谷晚餐順路；表參道可依當天逛街狀況選擇。'},
-{title:'12/16（三）｜上野・阿美橫町・秋葉原',areas:['上野','秋葉原'],tip:'上野、御徒町、秋葉原與淺草橋可搭配安排。'},
+{title:'12/16（三）｜上野・阿美橫町・秋葉原',areas:['上野','秋葉原','淺草橋'],tip:'上野、御徒町、秋葉原與淺草橋可搭配安排。'},
 {title:'12/17（四）｜哈利波特影城・新宿',areas:['新宿','池袋'],tip:'影城後以新宿為主；池袋是可選繞路，依當天體力決定。'},
 {title:'12/18（五）｜上野採買・返台',areas:['上野'],tip:'返台前以快速用餐為主，記得預留取行李及前往機場時間。'}
 ];
